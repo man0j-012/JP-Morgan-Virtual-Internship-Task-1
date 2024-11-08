@@ -1,0 +1,66 @@
+From a65b243c00c19233f9bfcfe7a9cd9eefdd7ba0e8 Mon Sep 17 00:00:00 2001
+From: Manoj Myneni <dattumyneni@gmail.com>
+Date: Mon, 8 Jul 2024 14:17:23 -0500
+Subject: [PATCH] Create Patch File
+
+---
+ client3.py     | 9 ++++++---
+ client_test.py | 5 +++++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/client3.py b/client3.py
+index f1771c3..c669dde 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,17 @@ def getDataPoint(quote):
+ 	stock = quote['stock']
+ 	bid_price = float(quote['top_bid']['price'])
+ 	ask_price = float(quote['top_ask']['price'])
+-	price = bid_price
++	price = (bid_price + ask_price) / 2
+ 	return stock, bid_price, ask_price, price
+ 
+ def getRatio(price_a, price_b):
+ 	""" Get ratio of price_a and price_b """
+ 	""" ------------- Update this function ------------- """
+ 	""" Also create some unit tests for this function in client_test.py """
+-	return 1
++	if price_b == 0:
++		return None
++	return price_a / price_b
++
+ 
+ # Main
+ if __name__ == "__main__":
+@@ -56,4 +59,4 @@ if __name__ == "__main__":
+ 			stock, bid_price, ask_price, price = getDataPoint(quote)
+ 			print ("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-		print ("Ratio %s" % getRatio(price, price))
++		print ("Ratio %s" % getRatio(price["ABC"], price["DEF"]))
+diff --git a/client_test.py b/client_test.py
+index af2bf26..7299337 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -8,6 +8,8 @@ class ClientTest(unittest.TestCase):
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+     """ ------------ Add the assertion below ------------ """
++    for quote in quotes:
++       self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'],(quote['topbid']['price'] + quote['top_ask']['price'])/2))
+ 
+   def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
+     quotes = [
+@@ -15,6 +17,9 @@ class ClientTest(unittest.TestCase):
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+     """ ------------ Add the assertion below ------------ """
++    for quote in quotes:
++       self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'],(quote['topbid']['price'] + quote['top_ask']['price'])/2))
++
+ 
+ 
+   """ ------------ Add more unit tests ------------ """
+-- 
+2.43.0.windows.1
+
